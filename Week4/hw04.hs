@@ -1,3 +1,4 @@
+-- Exercise 1
 fun1 :: [Integer] -> Integer
 fun1 [] = 1
 fun1 (x:xs)
@@ -18,34 +19,37 @@ funz x = if even x then x `div` 2 else 3*x+1
 fun2' :: Integer -> Integer
 fun2' n = sum . (filter even) . takeWhile (/= 1) $ iterate funz n
 
+--------------------------------------------------------------------------------
+-- Exercise 2
+
 data Tree a = Leaf | Node Integer (Tree a) a (Tree a)
               deriving (Show, Eq)
 
 
 foldTree :: [a] -> Tree a
-foldTree as = foldr makeTree Leaf as
+foldTree as = foldl makeTree Leaf as
 
 treeDepth :: Tree a -> Integer
 treeDepth Leaf = (-1)
 treeDepth (Node d _ _ _) = d
 
-makeTree :: a -> Tree a -> Tree a
-makeTree a Leaf = Node 0 Leaf a Leaf
-makeTree a (Node depth leftNode val rightNode)
+makeTree :: Tree a -> a -> Tree a
+makeTree Leaf a = Node 0 Leaf a Leaf
+makeTree (Node depth leftNode val rightNode) a
     | treeDepth leftNode <= treeDepth rightNode =
-        let newLeft = makeTree a leftNode
+        let newLeft = makeTree leftNode a
             leftDepth = treeDepth newLeft
         in Node ((max leftDepth (treeDepth rightNode)) + 1) newLeft val rightNode
     | otherwise =
-        let newRight = makeTree a rightNode
+        let newRight = makeTree rightNode a
             rightDepth = treeDepth newRight
         in Node ((max (treeDepth leftNode) rightDepth) + 1) leftNode val newRight
 
--- xor [False, True, False] == True
--- xor [False, True, False, False, True] == False
+--------------------------------------------------------------------------------
+-- Exercise 3
 
 xor :: [Bool] -> Bool
-xor = foldr blah False
+xor = foldl blah False
     where blah b1 b2 = if (not b1) then b2 else b1 && (not b2)
 
 map' :: (a -> b) -> [a] -> [b]
