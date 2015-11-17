@@ -47,6 +47,15 @@ posNats = streamFromSeed (+1) 1
 interleave :: Stream a -> Stream a -> Stream a
 interleave (Cons a st1) st2 = Cons a $ interleave st2 st1
 
--- not working yet
+-- not working
 ruler :: Stream Integer
 ruler = foldl' interleave (streamRepeat 0) (streamToList (streamMap streamRepeat posNats))
+
+
+maxPower :: Integer -> Integer
+maxPower x | x == 0 = 0
+           | x `mod` 2 == 0 = 1 + maxPower(x `div` 2)
+           | otherwise = 0
+
+rulerSimple :: Stream Integer
+rulerSimple = streamMap maxPower nats
