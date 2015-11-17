@@ -45,7 +45,7 @@ posNats :: Stream Integer
 posNats = streamFromSeed (+1) 1
 
 interleave :: Stream a -> Stream a -> Stream a
-interleave (Cons a st1) (Cons b st2) = Cons a $ Cons b $ interleave st1 st2
+interleave (Cons a st1) st2 = Cons a $ interleave st2 st1
 
 -- not working yet
 ruler :: Stream Integer
